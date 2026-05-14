@@ -1,3 +1,5 @@
+import OpenStatus from './OpenStatus'
+
 export default function Contact() {
   return (
     <section id="iletisim" className="py-24 bg-gray-900">
@@ -48,11 +50,12 @@ export default function Contact() {
               </div>
               <div>
                 <h3 className="font-bold text-white mb-1">Çalışma Saatleri</h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400 text-sm mb-2">
                   Pazartesi – Cumartesi
                   <br />
                   <span className="font-semibold text-white">08:30 – 19:00</span>
                 </p>
+                <OpenStatus variant="card" />
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import OpenStatus from './OpenStatus'
 
 const links = [
   { href: '#anasayfa', label: 'Ana Sayfa' },
@@ -35,6 +36,7 @@ export default function Navbar() {
         </a>
 
         <div className="hidden md:flex items-center gap-8">
+          <OpenStatus variant="navbar" />
           {links.map((l) => (
             <a
               key={l.href}
