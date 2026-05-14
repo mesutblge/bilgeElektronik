@@ -16,13 +16,10 @@ function getStatus() {
   const isInHours = time >= open && time < close
 
   if (isWeekday && isInHours) {
-    const remaining = close - time
-    const h = Math.floor(remaining / 60)
-    const m = remaining % 60
     return {
       open: true,
       label: 'Şu an Açık',
-      sub: h > 0 ? `${h} saat ${m} dakika sonra kapanır` : `${m} dakika sonra kapanır`,
+      sub: '08:30 – 19:00',
     }
   }
 
