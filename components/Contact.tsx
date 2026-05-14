@@ -49,7 +49,7 @@ export default function Contact() {
               <div>
                 <h3 className="font-bold text-white mb-1">Çalışma Saatleri</h3>
                 <p className="text-gray-400 text-sm">
-                  Pazartesi – Pazar
+                  Pazartesi – Cumartesi
                   <br />
                   <span className="font-semibold text-white">08:30 – 19:00</span>
                 </p>
