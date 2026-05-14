@@ -200,6 +200,10 @@ export default function AdminPage() {
         )}
       </div>
 
+      <div className="text-center mt-12 text-gray-600 text-sm">
+        Babama sevgilerle ❤️
+      </div>
+
       {lightboxIndex !== null && (
         <Lightbox
           images={images}
