@@ -44,10 +44,6 @@ Geliştirme sunucusunu başlat:
 npm run dev
 ```
 
-## Admin Paneli
-
-`/yunus` adresinden şifreyle giriş yapılır.
-
 ## Canlı Site
 
 [bilge-elektronik.vercel.app](https://bilge-elektronik.vercel.app)
