@@ -1,10 +1,16 @@
+'use client'
+
+import OpenStatus from './OpenStatus'
+
 export default function WhatsAppButton() {
   return (
-    <a
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+      <OpenStatus variant="navbar" />
+      <a
       href="https://wa.me/905427963140?text=Merhaba%2C%20tamir%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-full shadow-lg shadow-green-500/30 transition-all hover:scale-105 group"
+      className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-full shadow-lg shadow-green-500/30 transition-all hover:scale-105 group"
       aria-label="WhatsApp ile iletişime geç"
     >
       <svg
@@ -18,5 +24,6 @@ export default function WhatsAppButton() {
       </svg>
       <span className="text-sm">WhatsApp</span>
     </a>
+    </div>
   )
 }
