@@ -2,32 +2,32 @@ const services = [
   {
     icon: '📺',
     title: 'Televizyon Tamiri',
-    desc: 'LCD, LED, OLED ve Plazma TV tamiri. Her marka ve model.',
+    desc: 'Nazilli\'de LCD, LED, OLED ve Plazma TV tamiri. Samsung, LG, Vestel, Arçelik her marka garantili servis.',
   },
   {
     icon: '📡',
-    title: 'Uydu Kurulumu',
-    desc: 'Çanak anten kurulumu, alıcı ayarı ve arıza giderme.',
+    title: 'Uydu Montajı',
+    desc: 'Nazilli uydu montajı ve çanak anten kurulumu. Alıcı ayarı, kanal arama ve arıza giderme.',
   },
   {
     icon: '🔧',
     title: 'Elektronik Tamir',
-    desc: 'Anakart, güç kaynağı, kart tamiri ve komponent değişimi.',
+    desc: 'Anakart, güç kaynağı ve kart tamiri. Nazilli\'de her türlü elektronik cihaz servisi.',
   },
   {
     icon: '🖥️',
     title: 'Ekran Değişimi',
-    desc: 'Kırık, çatlak veya görüntü sorunu olan panel değişimi.',
+    desc: 'Kırık, çatlak veya görüntü sorunu olan TV panel ve ekran değişimi. Orijinal parça.',
   },
   {
     icon: '📶',
     title: 'Anten Kurulumu',
-    desc: 'Karasal anten kurulumu, sinyal güçlendirme.',
+    desc: 'Nazilli anten montajı ve karasal yayın kurulumu. Sinyal güçlendirme ve hat çekimi.',
   },
   {
     icon: '🚗',
     title: 'Yerinde Servis',
-    desc: 'Nazilli ve çevresine talep üzerine yerinde servis hizmeti.',
+    desc: 'Nazilli ve çevre ilçelere talep üzerine yerinde uydu, anten ve TV tamir hizmeti.',
   },
 ]
 
