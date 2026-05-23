@@ -10,7 +10,7 @@ export default function About() {
             <h2 className="text-4xl font-black text-white mt-2 mb-6">Hakkımızda</h2>
             <p className="text-gray-300 leading-relaxed mb-4">
               <strong className="text-white">Bilge Elektronik</strong>, Yunus Bilge tarafından
-              kurulan ve Nazilli&apos;de 20 yılı aşkın süredir hizmet veren bir elektronik tamir
+              kurulan ve Nazilli&apos;de 30 yılı aşkın süredir hizmet veren bir elektronik tamir
               atölyesidir.
             </p>
             <p className="text-gray-400 leading-relaxed mb-6">
@@ -28,7 +28,7 @@ export default function About() {
 
           <div className="grid grid-cols-3 gap-4">
             {[
-              { icon: '🏆', value: '20+', label: 'Yıl Deneyim' },
+              { icon: '🏆', value: '30+', label: 'Yıl Deneyim' },
               { icon: '😊', value: '1000+', label: 'Memnun Müşteri' },
               { icon: '🔩', value: 'Her Marka', label: 'TV & Uydu' },
               { icon: '💰', value: 'Uygun', label: 'Fiyat' },

@@ -21,7 +21,7 @@ export default function Contact() {
               <div>
                 <h3 className="font-bold text-white mb-1">Adres</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">
-                  Yeni Mahalle 161. Sokak No:9/B
+                  Yeni Mahalle 161. Sokak No:9/A
                   <br />
                   Nazilli / Aydın
                 </p>

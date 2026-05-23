@@ -38,7 +38,7 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-3">İletişim</h4>
             <div className="space-y-2 text-sm text-gray-400">
-              <p>Yeni Mahalle 161. Sokak No:9/B</p>
+              <p>Yeni Mahalle 161. Sokak No:9/A</p>
               <p>Nazilli / Aydın</p>
               <a href="tel:05427963140" className="block text-red-400 hover:text-red-300">
                 0542 796 31 40

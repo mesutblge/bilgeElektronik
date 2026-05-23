@@ -27,7 +27,7 @@ export default function Hero() {
         </p>
 
         <p className="text-gray-400 mb-10 max-w-xl mx-auto">
-          Nazilli&apos;de uydu montajı, anten kurulumu ve televizyon tamirinde 20 yılı aşkın
+          Nazilli&apos;de uydu montajı, anten kurulumu ve televizyon tamirinde 30 yılı aşkın
           tecrübe. Her marka TV, çanak anten ve elektronik cihaz servisi — yerinde hizmet.
         </p>
 
@@ -48,7 +48,7 @@ export default function Hero() {
 
         <div className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto">
           {[
-            { value: '20+', label: 'Yıl Deneyim' },
+            { value: '30+', label: 'Yıl Deneyim' },
             { value: '1000+', label: 'Memnun Müşteri' },
             { value: 'Her Marka', label: 'TV & Uydu' },
           ].map((s) => (

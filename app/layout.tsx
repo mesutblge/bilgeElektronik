@@ -7,12 +7,12 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Bilge Elektronik | Nazilli Uydu Montajı, TV Tamiri, Anten Kurulumu',
   description:
-    "Nazilli uydu montajı, anten kurulumu, televizyon tamiri. Bilge Elektronik - Yunus Bilge. 20 yıllık deneyim. Nazilli ve çevresine yerinde servis. 0542 796 31 40",
+    "Nazilli uydu montajı, anten kurulumu, televizyon tamiri. Bilge Elektronik - Yunus Bilge. 30 yıllık deneyim. Nazilli ve çevresine yerinde servis. 0542 796 31 40",
   keywords:
     'nazilli uydu montajı, nazilli anten montajı, nazilli televizyon tamiri, nazilli uydu tamircisi, nazilli tv tamiri, bilge elektronik, nazilli elektronik tamir, yunus bilge, aydın uydu montajı, nazilli çanak anten, nazilli uydu kurulumu, nazilli anten kurulumu, nazilli lcd tamir, nazilli oled tamir',
   openGraph: {
     title: 'Bilge Elektronik | Nazilli Uydu Montajı ve TV Tamiri',
-    description: "Nazilli uydu montajı, anten kurulumu ve televizyon tamirinde 20 yıllık deneyim.",
+    description: "Nazilli uydu montajı, anten kurulumu ve televizyon tamirinde 30 yıllık deneyim.",
     locale: 'tr_TR',
     type: 'website',
   },
@@ -23,10 +23,10 @@ const localBusinessSchema = {
   '@type': 'ElectronicsStore',
   name: 'Bilge Elektronik',
   description:
-    'Nazilli uydu montajı, anten kurulumu, televizyon tamiri ve elektronik cihaz servisi. 20 yılı aşkın tecrübe.',
+    'Nazilli uydu montajı, anten kurulumu, televizyon tamiri ve elektronik cihaz servisi. 30 yılı aşkın tecrübe.',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Yeni Mahalle 161. Sokak No:9/B',
+    streetAddress: 'Yeni Mahalle 161. Sokak No:9/A',
     addressLocality: 'Nazilli',
     addressRegion: 'Aydın',
     postalCode: '09800',
