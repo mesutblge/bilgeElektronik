@@ -28,7 +28,7 @@ export default function Hero() {
 
         <p className="text-gray-400 mb-10 max-w-xl mx-auto">
           Nazilli&apos;de uydu montajı, anten kurulumu ve televizyon tamirinde 20 yılı aşkın
-          tecrübe. Her marka TV, çanak anten ve elektronik cihaz servisi — garantili, yerinde hizmet.
+          tecrübe. Her marka TV, çanak anten ve elektronik cihaz servisi — yerinde hizmet.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

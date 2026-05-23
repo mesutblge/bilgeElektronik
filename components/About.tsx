@@ -14,9 +14,9 @@ export default function About() {
               atölyesidir.
             </p>
             <p className="text-gray-400 leading-relaxed mb-6">
-              Televizyon, uydu sistemi ve her türlü elektronik cihazın tamirinde uzmanlaşmış
-              ekibimiz, en güncel teknolojilere uyum sağlayarak güvenilir ve kalıcı çözümler
-              sunmaktadır. Müşteri memnuniyeti her zaman önceliğimizdir.
+              Televizyon, uydu sistemi ve her türlü elektronik cihazın tamirinde
+              en güncel teknolojilere uyum sağlayarak güvenilir ve kalıcı çözümler
+              sunmaktayız. Müşteri memnuniyeti her zaman önceliğimizdir.
             </p>
             <a
               href="tel:05427963140"
@@ -26,12 +26,14 @@ export default function About() {
             </a>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             {[
               { icon: '🏆', value: '20+', label: 'Yıl Deneyim' },
               { icon: '😊', value: '1000+', label: 'Memnun Müşteri' },
               { icon: '🔩', value: 'Her Marka', label: 'TV & Uydu' },
-              { icon: '✅', value: 'Garantili', label: 'Tamir Hizmeti' },
+              { icon: '💰', value: 'Uygun', label: 'Fiyat' },
+              { icon: '⚡', value: 'Hızlı', label: 'Servis' },
+              { icon: '🤝', value: 'Dürüst', label: 'Hizmet' },
             ].map((s) => (
               <div
                 key={s.label}

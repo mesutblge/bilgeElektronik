@@ -15,19 +15,19 @@ const services = [
     desc: 'Anakart, güç kaynağı ve kart tamiri. Nazilli\'de her türlü elektronik cihaz servisi.',
   },
   {
-    icon: '🖥️',
-    title: 'Ekran Değişimi',
-    desc: 'Kırık, çatlak veya görüntü sorunu olan TV panel ve ekran değişimi. Orijinal parça.',
-  },
-  {
     icon: '📶',
     title: 'Anten Kurulumu',
-    desc: 'Nazilli anten montajı ve karasal yayın kurulumu. Sinyal güçlendirme ve hat çekimi.',
+    desc: 'Nazilli anten montajı. Sinyal güçlendirme ve hat çekimi.',
   },
   {
     icon: '🚗',
     title: 'Yerinde Servis',
     desc: 'Nazilli ve çevre ilçelere talep üzerine yerinde uydu, anten ve TV tamir hizmeti.',
+  },
+  {
+    icon: '🏢',
+    title: 'Merkezi Sistem Kurulumu',
+    desc: 'Apartman, site ve iş yerleri için merkezi uydu ve anten sistemi kurulumu. Çoklu oda dağıtımı ve altyapı hattı çekimi.',
   },
 ]
 
