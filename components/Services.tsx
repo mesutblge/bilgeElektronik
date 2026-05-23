@@ -2,7 +2,7 @@ const services = [
   {
     icon: '📺',
     title: 'Televizyon Tamiri',
-    desc: 'Nazilli\'de LCD, LED, OLED ve Plazma TV tamiri. Samsung, LG, Vestel, Arçelik her marka garantili servis.',
+    desc: 'Nazilli\'de LCD, LED, OLED tamiri. Samsung, LG, Vestel, Arçelik ,Sunny , TLC her marka garantili servis.',
   },
   {
     icon: '📡',
