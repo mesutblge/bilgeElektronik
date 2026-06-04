@@ -21,9 +21,19 @@ export default function AdminPage() {
   useEffect(() => {
     const saved = sessionStorage.getItem('admin_pw')
     if (saved) {
-      setPassword(saved)
-      setAuthenticated(true)
-      loadImages()
+      fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: saved }),
+      }).then(res => {
+        if (res.ok) {
+          setPassword(saved)
+          setAuthenticated(true)
+          loadImages()
+        } else {
+          sessionStorage.removeItem('admin_pw')
+        }
+      })
     }
   }, [])
 
