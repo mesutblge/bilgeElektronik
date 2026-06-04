@@ -15,9 +15,10 @@ export async function GET() {
   try {
     const result = await cloudinary.api.resources({
       type: 'upload',
-      prefix: 'bilge_',
       max_results: 50,
     })
+
+    console.log('Tüm public_idler:', result.resources.map((r: { public_id: string }) => r.public_id))
 
     const images = result.resources.map((r: { public_id: string; secure_url: string }) => ({
       public_id: r.public_id,
