@@ -19,22 +19,12 @@ export default function AdminPage() {
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const saved = sessionStorage.getItem('admin_pw')
-    if (saved) {
-      fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: saved }),
-      }).then(res => {
-        if (res.ok) {
-          setPassword(saved)
-          setAuthenticated(true)
-          loadImages()
-        } else {
-          sessionStorage.removeItem('admin_pw')
-        }
-      })
-    }
+    fetch('/api/auth').then(res => {
+      if (res.ok) {
+        setAuthenticated(true)
+        loadImages()
+      }
+    })
   }, [])
 
   async function loadImages() {
@@ -50,14 +40,17 @@ export default function AdminPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password }),
     })
-    if (!res.ok) {
-      setError('Şifre yanlış')
-      return
-    }
-    sessionStorage.setItem('admin_pw', password)
+    if (!res.ok) { setError('Şifre yanlış'); return }
     setAuthenticated(true)
     setError('')
+    setPassword('')
     loadImages()
+  }
+
+  async function handleLogout() {
+    await fetch('/api/auth', { method: 'DELETE' })
+    setAuthenticated(false)
+    setImages([])
   }
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -66,11 +59,7 @@ export default function AdminPage() {
     setUploading(true)
     const form = new FormData()
     form.append('file', file)
-    await fetch('/api/upload', {
-      method: 'POST',
-      headers: { 'x-admin-password': password },
-      body: form,
-    })
+    await fetch('/api/upload', { method: 'POST', body: form })
     await loadImages()
     setUploading(false)
     if (fileRef.current) fileRef.current.value = ''
@@ -80,7 +69,7 @@ export default function AdminPage() {
     setDeleting(publicId)
     await fetch('/api/delete', {
       method: 'DELETE',
-      headers: { 'x-admin-password': password, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ publicId }),
     })
     await loadImages()
@@ -128,10 +117,7 @@ export default function AdminPage() {
             <a href="/" className="border border-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm transition-colors">
               ← Siteye Dön
             </a>
-            <button
-              onClick={() => { sessionStorage.removeItem('admin_pw'); setAuthenticated(false); setPassword('') }}
-              className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm transition-colors"
-            >
+            <button onClick={handleLogout} className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm transition-colors">
               Çıkış
             </button>
           </div>
