@@ -13,12 +13,11 @@ export async function GET() {
   }
 
   try {
-    const result = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: 'bilge-elektronik',
+    const result = await cloudinary.api.resources_by_asset_folder('bilge-elektronik', {
       max_results: 50,
-      direction: -1,
     })
+
+    console.log('Bulunan resim sayısı:', result.resources.length)
 
     const images = result.resources.map((r: { public_id: string; secure_url: string }) => ({
       public_id: r.public_id,
