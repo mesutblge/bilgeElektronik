@@ -13,16 +13,10 @@ export async function GET() {
   }
 
   try {
-    const result = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: 'bilge-elektronik/',
+    const result = await cloudinary.api.resources_by_tag('bilge-elektronik', {
       max_results: 50,
+      direction: 'desc',
     })
-
-    console.log('Bulunan resim sayısı:', result.resources.length)
-    if (result.resources.length > 0) {
-      console.log('İlk resim public_id:', result.resources[0].public_id)
-    }
 
     const images = result.resources.map((r: { public_id: string; secure_url: string }) => ({
       public_id: r.public_id,
@@ -31,7 +25,7 @@ export async function GET() {
 
     return NextResponse.json({ images })
   } catch (err) {
-    console.error('Cloudinary images error:', JSON.stringify(err))
-    return NextResponse.json({ images: [], error: String(err) })
+    console.error('Cloudinary images error:', err)
+    return NextResponse.json({ images: [] })
   }
 }

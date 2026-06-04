@@ -26,12 +26,8 @@ export async function POST(req: NextRequest) {
     const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`
 
     const result = await cloudinary.uploader.upload(dataUri, {
-      folder: 'bilge-elektronik',
+      tags: ['bilge-elektronik'],
     })
-
-    console.log('Upload sonuç - public_id:', result.public_id)
-    console.log('Upload sonuç - url:', result.secure_url)
-    console.log('Upload sonuç - asset_folder:', result.asset_folder)
 
     return NextResponse.json({ url: result.secure_url, public_id: result.public_id })
   } catch (err) {
