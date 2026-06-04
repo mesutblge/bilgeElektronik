@@ -15,9 +15,12 @@ export async function DELETE(req: NextRequest) {
 
   try {
     const { publicId } = await req.json()
-    await cloudinary.uploader.destroy(publicId)
-    return NextResponse.json({ success: true })
-  } catch {
+    console.log('Siliniyor publicId:', publicId)
+    const result = await cloudinary.uploader.destroy(publicId)
+    console.log('Cloudinary sonuç:', result)
+    return NextResponse.json({ success: true, result })
+  } catch (err) {
+    console.error('Cloudinary delete error:', err)
     return NextResponse.json({ error: 'Silme başarısız' }, { status: 500 })
   }
 }
