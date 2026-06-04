@@ -13,11 +13,12 @@ export async function GET() {
   }
 
   try {
-    const result = await cloudinary.search
-      .expression('folder:bilge-elektronik')
-      .sort_by('created_at', 'desc')
-      .max_results(50)
-      .execute()
+    const result = await cloudinary.api.resources({
+      type: 'upload',
+      prefix: 'bilge-elektronik',
+      max_results: 50,
+      direction: -1,
+    })
 
     const images = result.resources.map((r: { public_id: string; secure_url: string }) => ({
       public_id: r.public_id,
@@ -25,7 +26,8 @@ export async function GET() {
     }))
 
     return NextResponse.json({ images })
-  } catch {
+  } catch (err) {
+    console.error('Cloudinary images error:', err)
     return NextResponse.json({ images: [] })
   }
 }
