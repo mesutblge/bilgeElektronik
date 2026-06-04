@@ -20,14 +20,11 @@ export default function AdminPage() {
 
   useEffect(() => {
     fetch('/api/auth').then(res => {
-      if (res.ok) {
-        setAuthenticated(true)
-        loadImages()
-      }
+      if (res.ok) { setAuthenticated(true); fetchImages() }
     })
   }, [])
 
-  async function loadImages() {
+  async function fetchImages() {
     const res = await fetch('/api/images')
     const data = await res.json()
     setImages(data.images || [])
@@ -44,7 +41,7 @@ export default function AdminPage() {
     setAuthenticated(true)
     setError('')
     setPassword('')
-    loadImages()
+    fetchImages()
   }
 
   async function handleLogout() {
@@ -59,11 +56,8 @@ export default function AdminPage() {
     setUploading(true)
     const form = new FormData()
     form.append('file', file)
-    const res = await fetch('/api/upload', { method: 'POST', body: form })
-    const data = await res.json()
-    if (data.url) {
-      setImages((prev) => [{ public_id: data.public_id, url: data.url }, ...prev])
-    }
+    await fetch('/api/upload', { method: 'POST', body: form })
+    await fetchImages()
     setUploading(false)
     if (fileRef.current) fileRef.current.value = ''
   }
@@ -75,7 +69,7 @@ export default function AdminPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ publicId }),
     })
-    setImages((prev) => prev.filter((img) => img.public_id !== publicId))
+    await fetchImages()
     setDeleting(null)
   }
 
@@ -117,20 +111,14 @@ export default function AdminPage() {
             <p className="text-slate-400 text-sm mt-1">Galeri fotoğraflarını yönet</p>
           </div>
           <div className="flex gap-3">
-            <a href="/" className="border border-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm transition-colors">
-              ← Siteye Dön
-            </a>
-            <button onClick={handleLogout} className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm transition-colors">
-              Çıkış
-            </button>
+            <a href="/" className="border border-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm transition-colors">← Siteye Dön</a>
+            <button onClick={handleLogout} className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm transition-colors">Çıkış</button>
           </div>
         </div>
 
         <div className="bg-slate-800 border-2 border-dashed border-slate-600 hover:border-red-500 rounded-2xl p-8 text-center mb-8 transition-colors cursor-pointer" onClick={() => fileRef.current?.click()}>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
-          {uploading ? (
-            <div className="text-red-400 animate-pulse">Yükleniyor...</div>
-          ) : (
+          {uploading ? <div className="text-red-400 animate-pulse">Yükleniyor...</div> : (
             <>
               <div className="text-4xl mb-2">📷</div>
               <p className="text-white font-semibold">Fotoğraf Ekle</p>
@@ -148,14 +136,8 @@ export default function AdminPage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={img.url} alt="galeri" className="w-full h-full object-cover cursor-pointer" onClick={() => setLightboxIndex(i)} />
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                  <button onClick={() => setLightboxIndex(i)} className="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-3 py-2 rounded-lg">
-                    🔍 Gör
-                  </button>
-                  <button
-                    onClick={() => handleDelete(img.public_id)}
-                    disabled={deleting === img.public_id}
-                    className="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg disabled:opacity-50"
-                  >
+                  <button onClick={() => setLightboxIndex(i)} className="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-3 py-2 rounded-lg">🔍 Gör</button>
+                  <button onClick={() => handleDelete(img.public_id)} disabled={deleting === img.public_id} className="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg disabled:opacity-50">
                     {deleting === img.public_id ? '...' : '🗑 Sil'}
                   </button>
                 </div>
