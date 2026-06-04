@@ -59,8 +59,11 @@ export default function AdminPage() {
     setUploading(true)
     const form = new FormData()
     form.append('file', file)
-    await fetch('/api/upload', { method: 'POST', body: form })
-    await loadImages()
+    const res = await fetch('/api/upload', { method: 'POST', body: form })
+    const data = await res.json()
+    if (data.url) {
+      setImages((prev) => [{ public_id: data.public_id, url: data.url }, ...prev])
+    }
     setUploading(false)
     if (fileRef.current) fileRef.current.value = ''
   }
@@ -72,7 +75,7 @@ export default function AdminPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ publicId }),
     })
-    await loadImages()
+    setImages((prev) => prev.filter((img) => img.public_id !== publicId))
     setDeleting(null)
   }
 
