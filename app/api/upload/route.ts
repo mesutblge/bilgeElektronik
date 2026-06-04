@@ -8,31 +8,21 @@ cloudinary.config({
 })
 
 export async function POST(req: NextRequest) {
-  const password = req.headers.get('x-admin-password')
-  if (password !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: 'Yetkisiz erişim' }, { status: 401 })
+  if (req.headers.get('x-admin-password') !== process.env.ADMIN_PASSWORD) {
+    return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 })
   }
-
   try {
     const formData = await req.formData()
     const file = formData.get('file') as File
-
-    if (!file) {
-      return NextResponse.json({ error: 'Dosya bulunamadı' }, { status: 400 })
-    }
+    if (!file) return NextResponse.json({ error: 'Dosya yok' }, { status: 400 })
 
     const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-    const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`
+    const dataUri = `data:${file.type};base64,${Buffer.from(bytes).toString('base64')}`
+    const result = await cloudinary.uploader.upload(dataUri)
 
-    const result = await cloudinary.uploader.upload(dataUri, {
-      asset_folder: 'bilge-elektronik',
-    })
-
-    console.log('Yüklendi:', result.public_id, result.secure_url)
     return NextResponse.json({ url: result.secure_url, public_id: result.public_id })
   } catch (err) {
-    console.error('Upload hatası:', err)
+    console.error(err)
     return NextResponse.json({ error: 'Yükleme başarısız' }, { status: 500 })
   }
 }
