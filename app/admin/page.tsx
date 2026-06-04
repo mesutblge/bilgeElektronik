@@ -73,14 +73,12 @@ export default function AdminPage() {
 
   async function handleDelete(publicId: string) {
     setDeleting(publicId)
-    const res = await fetch('/api/delete', {
+    await fetch('/api/delete', {
       method: 'DELETE',
       headers: { 'x-admin-password': password, 'Content-Type': 'application/json' },
       body: JSON.stringify({ publicId }),
     })
-    if (res.ok) {
-      setImages((prev) => prev.filter((img) => img.public_id !== publicId))
-    }
+    await loadImages(password)
     setDeleting(null)
   }
 
