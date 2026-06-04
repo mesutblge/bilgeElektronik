@@ -13,12 +13,11 @@ export async function GET() {
   }
 
   try {
-    const result = await cloudinary.api.resources({
-      type: 'upload',
+    const result = await cloudinary.api.resources_by_asset_folder('bilge-elektronik', {
       max_results: 50,
     })
 
-    console.log('Tüm public_idler:', result.resources.map((r: { public_id: string }) => r.public_id))
+    console.log('Bulunan:', result.resources.length, 'resim')
 
     const images = result.resources.map((r: { public_id: string; secure_url: string }) => ({
       public_id: r.public_id,
@@ -27,7 +26,7 @@ export async function GET() {
 
     return NextResponse.json({ images })
   } catch (err) {
-    console.error('Cloudinary images error:', err)
-    return NextResponse.json({ images: [] })
+    console.error('Images hatası:', String(err))
+    return NextResponse.json({ images: [], error: String(err) })
   }
 }

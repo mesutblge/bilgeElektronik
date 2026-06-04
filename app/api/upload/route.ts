@@ -26,12 +26,13 @@ export async function POST(req: NextRequest) {
     const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`
 
     const result = await cloudinary.uploader.upload(dataUri, {
-      public_id: `bilge_${Date.now()}`,
+      asset_folder: 'bilge-elektronik',
     })
 
+    console.log('Yüklendi:', result.public_id, result.secure_url)
     return NextResponse.json({ url: result.secure_url, public_id: result.public_id })
   } catch (err) {
-    console.error('Cloudinary upload error:', err)
-    return NextResponse.json({ error: 'Yükleme başarısız', detail: String(err) }, { status: 500 })
+    console.error('Upload hatası:', err)
+    return NextResponse.json({ error: 'Yükleme başarısız' }, { status: 500 })
   }
 }
