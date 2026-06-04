@@ -15,22 +15,20 @@ export async function GET() {
   try {
     const result = await cloudinary.api.resources({
       type: 'upload',
-      max_results: 50,
+      max_results: 100,
     })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    result.resources.forEach((r: any) => {
-      console.log('public_id:', r.public_id, '| asset_folder:', r.asset_folder)
-    })
-
-    const images = result.resources.map((r: { public_id: string; secure_url: string }) => ({
-      public_id: r.public_id,
-      url: r.secure_url,
-    }))
+    const images = result.resources
+      .filter((r: any) => r.asset_folder === 'bilge-elektronik')
+      .map((r: { public_id: string; secure_url: string }) => ({
+        public_id: r.public_id,
+        url: r.secure_url,
+      }))
 
     return NextResponse.json({ images })
   } catch (err) {
-    console.error('Images hatası:', String(err))
-    return NextResponse.json({ images: [], error: String(err) })
+    console.error('Images hatası:', err)
+    return NextResponse.json({ images: [] })
   }
 }
