@@ -58,12 +58,15 @@ export default function AdminPage() {
     setUploading(true)
     const form = new FormData()
     form.append('file', file)
-    await fetch('/api/upload', {
+    const res = await fetch('/api/upload', {
       method: 'POST',
       headers: { 'x-admin-password': password },
       body: form,
     })
-    await loadImages(password)
+    const data = await res.json()
+    if (data.url && data.public_id) {
+      setImages((prev) => [{ public_id: data.public_id, url: data.url }, ...prev])
+    }
     setUploading(false)
     if (fileRef.current) fileRef.current.value = ''
   }
