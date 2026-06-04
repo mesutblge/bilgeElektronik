@@ -19,8 +19,9 @@ export async function GET() {
     })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const images = result.resources
-      .filter((r: any) => r.asset_folder === 'bilge-elektronik')
+      .filter((r: any) => !r.public_id.startsWith('cld-') && r.public_id !== 'sample')
       .map((r: { public_id: string; secure_url: string }) => ({
         public_id: r.public_id,
         url: r.secure_url,
