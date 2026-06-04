@@ -16,6 +16,7 @@ export default function AdminPage() {
   const [uploading, setUploading] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -137,7 +138,7 @@ export default function AdminPage() {
                 <img src={img.url} alt="galeri" className="w-full h-full object-cover cursor-pointer" onClick={() => setLightboxIndex(i)} />
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                   <button onClick={() => setLightboxIndex(i)} className="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-3 py-2 rounded-lg">🔍 Gör</button>
-                  <button onClick={() => handleDelete(img.public_id)} disabled={deleting === img.public_id} className="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg disabled:opacity-50">
+                  <button onClick={() => setConfirmDelete(img.public_id)} disabled={deleting === img.public_id} className="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg disabled:opacity-50">
                     {deleting === img.public_id ? '...' : '🗑 Sil'}
                   </button>
                 </div>
@@ -148,6 +149,30 @@ export default function AdminPage() {
       </div>
 
       <div className="text-center mt-12 text-gray-600 text-sm">Babama sevgilerle ❤️</div>
+
+      {confirmDelete && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4">
+          <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-sm border border-slate-700 shadow-xl">
+            <div className="text-3xl text-center mb-3">⚠️</div>
+            <h3 className="text-white font-bold text-lg text-center mb-2">Emin misin?</h3>
+            <p className="text-slate-400 text-sm text-center mb-6">Bu işlem geri alınamaz, fotoğraf kalıcı olarak silinecek.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmDelete(null)}
+                className="flex-1 border border-slate-600 text-slate-300 hover:text-white py-2 rounded-xl text-sm transition-colors"
+              >
+                İptal Et
+              </button>
+              <button
+                onClick={() => { handleDelete(confirmDelete); setConfirmDelete(null) }}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-xl text-sm transition-colors"
+              >
+                Sil
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {lightboxIndex !== null && (
         <Lightbox
