@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 import Lightbox from './Lightbox'
 
 interface GalleryImage {
@@ -17,10 +16,7 @@ export default function Gallery() {
   useEffect(() => {
     fetch('/api/images')
       .then((r) => r.json())
-      .then((data) => {
-        setImages(data.images || [])
-        setLoading(false)
-      })
+      .then((data) => { setImages(data.images || []); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 
@@ -28,9 +24,7 @@ export default function Gallery() {
     <section id="galeri" className="py-24 bg-gray-900">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-14">
-          <span className="text-red-500 font-semibold text-sm uppercase tracking-widest">
-            Çalışmalarımız
-          </span>
+          <span className="text-red-500 font-semibold text-sm uppercase tracking-widest">Çalışmalarımız</span>
           <h2 className="text-4xl font-black text-white mt-2">Galeri</h2>
           <p className="text-gray-400 mt-3">Tamamladığımız işlerden örnekler</p>
         </div>
@@ -58,12 +52,8 @@ export default function Gallery() {
                 className="aspect-square relative rounded-xl overflow-hidden group cursor-pointer border border-gray-800 hover:border-red-500/50 transition-all"
                 onClick={() => setLightboxIndex(i)}
               >
-                <Image
-                  src={img.url}
-                  alt="Bilge Elektronik çalışma"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img.url} alt="Bilge Elektronik çalışma" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <span className="text-white text-3xl">🔍</span>
                 </div>
