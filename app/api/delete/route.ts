@@ -16,7 +16,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const { publicId } = await req.json()
     console.log('Siliniyor publicId:', publicId)
-    const result = await cloudinary.uploader.destroy(publicId)
+    const result = await cloudinary.api.delete_resources([publicId], { resource_type: 'image', type: 'upload' })
     console.log('Cloudinary sonuç:', result)
     return NextResponse.json({ success: true, result })
   } catch (err) {
