@@ -13,9 +13,10 @@ export async function GET() {
   }
 
   try {
-    const result = await cloudinary.api.resources_by_tag('bilge-elektronik', {
+    const result = await cloudinary.api.resources({
+      type: 'upload',
+      prefix: 'bilge_',
       max_results: 50,
-      direction: 'desc',
     })
 
     const images = result.resources.map((r: { public_id: string; secure_url: string }) => ({
