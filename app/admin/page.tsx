@@ -2,10 +2,65 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Lightbox from '@/components/Lightbox'
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  useSortable,
+  arrayMove,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 interface GalleryImage {
   public_id: string
   url: string
+}
+
+function SortableImage({
+  img,
+  index,
+  deleting,
+  onView,
+  onDelete,
+}: {
+  img: GalleryImage
+  index: number
+  deleting: string | null
+  onView: (i: number) => void
+  onDelete: (id: string) => void
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: img.public_id })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 10 : undefined,
+  }
+
+  return (
+    <div ref={setNodeRef} style={style} className="group relative aspect-square rounded-xl overflow-hidden bg-slate-700">
+      <div {...attributes} {...listeners} className="absolute top-2 left-2 z-10 bg-black/50 rounded-lg p-1 cursor-grab active:cursor-grabbing">
+        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"/>
+        </svg>
+      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={img.url} alt="galeri" className="w-full h-full object-cover cursor-pointer" onClick={() => onView(index)} />
+      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3 gap-2">
+        <button onClick={() => onView(index)} className="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-3 py-2 rounded-lg">🔍 Gör</button>
+        <button onClick={() => onDelete(img.public_id)} disabled={deleting === img.public_id} className="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg disabled:opacity-50">
+          {deleting === img.public_id ? '...' : '🗑 Sil'}
+        </button>
+      </div>
+    </div>
+  )
 }
 
 export default function AdminPage() {
@@ -19,6 +74,8 @@ export default function AdminPage() {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
+
   useEffect(() => {
     fetch('/api/auth').then(res => {
       if (res.ok) { setAuthenticated(true); fetchImages() }
@@ -31,6 +88,24 @@ export default function AdminPage() {
     setImages(data.images || [])
   }
 
+  async function saveOrder(items: GalleryImage[]) {
+    await fetch('/api/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order: items.map(i => i.url) }),
+    })
+  }
+
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    const oldIndex = images.findIndex(i => i.public_id === active.id)
+    const newIndex = images.findIndex(i => i.public_id === over.id)
+    const newImages = arrayMove(images, oldIndex, newIndex)
+    setImages(newImages)
+    await saveOrder(newImages)
+  }
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     const res = await fetch('/api/auth', {
@@ -39,16 +114,13 @@ export default function AdminPage() {
       body: JSON.stringify({ password }),
     })
     if (!res.ok) { setError('Şifre yanlış'); return }
-    setAuthenticated(true)
-    setError('')
-    setPassword('')
+    setAuthenticated(true); setError(''); setPassword('')
     fetchImages()
   }
 
   async function handleLogout() {
     await fetch('/api/auth', { method: 'DELETE' })
-    setAuthenticated(false)
-    setImages([])
+    setAuthenticated(false); setImages([])
   }
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -84,17 +156,10 @@ export default function AdminPage() {
             <p className="text-slate-400 text-sm mt-1">Bilge Elektronik</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="password"
-              placeholder="Şifre"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-700 border border-slate-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors"
-            />
+            <input type="password" placeholder="Şifre" value={password} onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-slate-700 border border-slate-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors" />
             {error && <p className="text-red-400 text-sm">{error}</p>}
-            <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors">
-              Giriş Yap
-            </button>
+            <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors">Giriş Yap</button>
           </form>
         </div>
       </div>
@@ -106,10 +171,8 @@ export default function AdminPage() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-white font-black text-2xl flex items-center gap-2">
-              <span className="text-red-500">⚡</span> Admin Paneli
-            </h1>
-            <p className="text-slate-400 text-sm mt-1">Galeri fotoğraflarını yönet</p>
+            <h1 className="text-white font-black text-2xl flex items-center gap-2"><span className="text-red-500">⚡</span> Admin Paneli</h1>
+            <p className="text-slate-400 text-sm mt-1">Sürükleyerek sıralamayı değiştirebilirsin</p>
           </div>
           <div className="flex gap-3">
             <a href="/" className="border border-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm transition-colors">← Siteye Dön</a>
@@ -120,31 +183,29 @@ export default function AdminPage() {
         <div className="bg-slate-800 border-2 border-dashed border-slate-600 hover:border-red-500 rounded-2xl p-8 text-center mb-8 transition-colors cursor-pointer" onClick={() => fileRef.current?.click()}>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
           {uploading ? <div className="text-red-400 animate-pulse">Yükleniyor...</div> : (
-            <>
-              <div className="text-4xl mb-2">📷</div>
-              <p className="text-white font-semibold">Fotoğraf Ekle</p>
-              <p className="text-slate-400 text-sm mt-1">Tıkla veya dosya seç</p>
-            </>
+            <><div className="text-4xl mb-2">📷</div><p className="text-white font-semibold">Fotoğraf Ekle</p><p className="text-slate-400 text-sm mt-1">Tıkla veya dosya seç</p></>
           )}
         </div>
 
         {images.length === 0 ? (
           <div className="text-center py-20 text-slate-500">Henüz fotoğraf yok. Yukarıdan ekleyin.</div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {images.map((img, i) => (
-              <div key={img.public_id} className="group relative aspect-square rounded-xl overflow-hidden bg-slate-700">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img.url} alt="galeri" className="w-full h-full object-cover cursor-pointer" onClick={() => setLightboxIndex(i)} />
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                  <button onClick={() => setLightboxIndex(i)} className="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-3 py-2 rounded-lg">🔍 Gör</button>
-                  <button onClick={() => setConfirmDelete(img.public_id)} disabled={deleting === img.public_id} className="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg disabled:opacity-50">
-                    {deleting === img.public_id ? '...' : '🗑 Sil'}
-                  </button>
-                </div>
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={images.map(i => i.public_id)} strategy={rectSortingStrategy}>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {images.map((img, i) => (
+                  <SortableImage
+                    key={img.public_id}
+                    img={img}
+                    index={i}
+                    deleting={deleting}
+                    onView={(idx) => setLightboxIndex(idx)}
+                    onDelete={(id) => setConfirmDelete(id)}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+            </SortableContext>
+          </DndContext>
         )}
       </div>
 
@@ -157,18 +218,8 @@ export default function AdminPage() {
             <h3 className="text-white font-bold text-lg text-center mb-2">Emin misin?</h3>
             <p className="text-slate-400 text-sm text-center mb-6">Bu işlem geri alınamaz, fotoğraf kalıcı olarak silinecek.</p>
             <div className="flex gap-3">
-              <button
-                onClick={() => setConfirmDelete(null)}
-                className="flex-1 border border-slate-600 text-slate-300 hover:text-white py-2 rounded-xl text-sm transition-colors"
-              >
-                İptal Et
-              </button>
-              <button
-                onClick={() => { handleDelete(confirmDelete); setConfirmDelete(null) }}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-xl text-sm transition-colors"
-              >
-                Sil
-              </button>
+              <button onClick={() => setConfirmDelete(null)} className="flex-1 border border-slate-600 text-slate-300 hover:text-white py-2 rounded-xl text-sm transition-colors">İptal Et</button>
+              <button onClick={() => { handleDelete(confirmDelete); setConfirmDelete(null) }} className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-xl text-sm transition-colors">Sil</button>
             </div>
           </div>
         </div>
