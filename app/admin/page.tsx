@@ -104,11 +104,6 @@ export default function AdminPage() {
     })
   }, [])
 
-  useEffect(() => {
-    if (!authenticated) return
-    const interval = setInterval(fetchStats, 30000)
-    return () => clearInterval(interval)
-  }, [authenticated])
 
   async function fetchImages() {
     const res = await fetch('/api/images')
