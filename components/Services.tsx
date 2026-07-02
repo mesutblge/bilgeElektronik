@@ -7,7 +7,7 @@ const services = [
   {
     icon: '📡',
     title: 'Nazilli Uydu Montajı',
-    desc: 'Nazilli uydu montajı ve çanak anten kurulumu. Digitürk, D-Smart, Tivibu uydu alıcı kurulumu, kanal arama ve sinyal ayarı. Aynı gün servis.',
+    desc: 'Nazilli uydu montajı ve çanak anten kurulumu. Uydu alıcı kurulumu, kanal arama ve sinyal ayarı. Aynı gün servis.',
   },
   {
     icon: '📶',
@@ -27,7 +27,7 @@ const services = [
   {
     icon: '🚗',
     title: 'Yerinde Servis',
-    desc: 'Nazilli, Kuyucak, Sultanhisar ve çevre köylere yerinde uydu, anten ve TV tamir hizmeti. Evinizden çıkmadan profesyonel servis.',
+    desc: 'Nazilli ve çevre köylere yerinde uydu, anten ve TV tamir hizmeti. Evinizden çıkmadan profesyonel servis.',
   },
 ]
 
