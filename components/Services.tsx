@@ -1,33 +1,33 @@
 const services = [
   {
     icon: '📺',
-    title: 'Televizyon Tamiri',
-    desc: 'Nazilli\'de LCD, LED, OLED tamiri. Samsung, LG, Vestel, Arçelik ,Sunny , TLC her marka garantili servis.',
+    title: 'Nazilli TV Tamiri',
+    desc: 'Nazilli\'de LCD, LED, OLED televizyon tamiri. Samsung, LG, Vestel, Arçelik, Sunny, TCL her marka TV tamircisi. Ekran değişimi, anakart tamiri, ses ve görüntü arızaları.',
   },
   {
     icon: '📡',
-    title: 'Uydu Montajı',
-    desc: 'Nazilli uydu montajı ve çanak anten kurulumu. Alıcı ayarı, kanal arama ve arıza giderme.',
-  },
-  {
-    icon: '🔧',
-    title: 'Elektronik Tamir',
-    desc: 'Anakart, güç kaynağı ve kart tamiri. Nazilli\'de her türlü elektronik cihaz servisi.',
+    title: 'Nazilli Uydu Montajı',
+    desc: 'Nazilli uydu montajı ve çanak anten kurulumu. Digitürk, D-Smart, Tivibu uydu alıcı kurulumu, kanal arama ve sinyal ayarı. Aynı gün servis.',
   },
   {
     icon: '📶',
-    title: 'Anten Kurulumu',
-    desc: 'Nazilli anten montajı. Sinyal güçlendirme ve hat çekimi.',
-  },
-  {
-    icon: '🚗',
-    title: 'Yerinde Servis',
-    desc: 'Nazilli ve çevre ilçelere talep üzerine yerinde uydu, anten ve TV tamir hizmeti.',
+    title: 'Nazilli Anten Montajı',
+    desc: 'Nazilli anten montajı ve çatı anteni kurulumu. Karasal yayın, sinyal güçlendirme, hat çekimi ve eski anten değişimi. Hızlı ve garantili kurulum.',
   },
   {
     icon: '🏢',
     title: 'Merkezi Sistem Kurulumu',
-    desc: 'Apartman, site ve iş yerleri için merkezi uydu ve anten sistemi kurulumu. Çoklu oda dağıtımı ve altyapı hattı çekimi.',
+    desc: 'Nazilli\'de apartman, site ve iş yerleri için merkezi uydu sistemi ve merkezi anten sistemi kurulumu. Çoklu oda dağıtımı ve altyapı hattı.',
+  },
+  {
+    icon: '🔧',
+    title: 'Elektronik Cihaz Tamiri',
+    desc: 'Nazilli elektronik tamir servisi. Anakart, güç kaynağı, kart tamiri. TV dışında her türlü elektronik cihaz arızası.',
+  },
+  {
+    icon: '🚗',
+    title: 'Yerinde Servis',
+    desc: 'Nazilli, Kuyucak, Sultanhisar ve çevre köylere yerinde uydu, anten ve TV tamir hizmeti. Evinizden çıkmadan profesyonel servis.',
   },
 ]
 
@@ -41,7 +41,7 @@ export default function Services() {
           </span>
           <h2 className="text-4xl font-black text-white mt-2">Hizmetlerimiz</h2>
           <p className="text-gray-400 mt-3 max-w-xl mx-auto">
-            Tüm marka ve modellerde profesyonel elektronik tamir ve kurulum hizmetleri
+            Nazilli\'de TV tamiri, uydu montajı ve anten kurulumu. 30 yılı aşkın tecrübeyle tüm marka ve modellerde garantili servis.
           </p>
         </div>
 
