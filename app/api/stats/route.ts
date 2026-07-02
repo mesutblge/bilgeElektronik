@@ -9,27 +9,35 @@ function makeToken() {
 }
 
 export async function GET(req: NextRequest) {
-  const token = req.cookies.get('admin_token')?.value
-  if (token !== makeToken()) {
-    return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 })
-  }
+  try {
+    const token = req.cookies.get('admin_token')?.value
+    if (token !== makeToken()) {
+      return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 })
+    }
 
-  const today = new Date().toISOString().split('T')[0]
-  const filename = `_clicks_${today}.json`
+    const today = new Date().toISOString().split('T')[0]
+    const filename = `_clicks_${today}.json`
 
-  const { blobs } = await list()
-  const clicksBlob = blobs.find((b) => b.pathname.includes(filename))
+    const { blobs } = await list()
+    const clicksBlob = blobs.find((b) => b.pathname.includes(filename))
 
-  if (!clicksBlob) {
+    if (!clicksBlob) {
+      return NextResponse.json({ clicks: [], phone: 0, whatsapp: 0 })
+    }
+
+    const res = await fetch(clicksBlob.url)
+    if (!res.ok) {
+      return NextResponse.json({ clicks: [], phone: 0, whatsapp: 0 })
+    }
+
+    const clicks: { type: string }[] = await res.json()
+
+    return NextResponse.json({
+      clicks,
+      phone: clicks.filter((c) => c.type === 'phone').length,
+      whatsapp: clicks.filter((c) => c.type === 'whatsapp').length,
+    })
+  } catch {
     return NextResponse.json({ clicks: [], phone: 0, whatsapp: 0 })
   }
-
-  const res = await fetch(clicksBlob.url, { cache: 'no-store' })
-  const clicks: { type: string }[] = await res.json()
-
-  return NextResponse.json({
-    clicks,
-    phone: clicks.filter((c) => c.type === 'phone').length,
-    whatsapp: clicks.filter((c) => c.type === 'whatsapp').length,
-  })
 }
