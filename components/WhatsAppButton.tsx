@@ -2,16 +2,12 @@
 
 import OpenStatus from './OpenStatus'
 
-async function handleWhatsAppClick(e: React.MouseEvent<HTMLAnchorElement>) {
-  e.preventDefault()
-  try {
-    await fetch('/api/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'whatsapp' }),
-    })
-  } catch {}
-  window.open('https://wa.me/905427963140?text=Merhaba%2C%20tamir%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum.', '_blank', 'noopener,noreferrer')
+function track(type: 'phone' | 'whatsapp') {
+  fetch('/api/track', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type }),
+  }).catch(() => {})
 }
 
 export default function WhatsAppButton() {
@@ -22,7 +18,7 @@ export default function WhatsAppButton() {
       href="https://wa.me/905427963140?text=Merhaba%2C%20tamir%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
       target="_blank"
       rel="noopener noreferrer"
-      onClick={handleWhatsAppClick}
+      onClick={() => track('whatsapp')}
       className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-full shadow-lg shadow-green-500/30 transition-all hover:scale-105 group"
       aria-label="WhatsApp ile iletişime geç"
     >

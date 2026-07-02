@@ -10,6 +10,14 @@ const links = [
   { href: '#iletisim', label: 'İletişim' },
 ]
 
+function trackPhone() {
+  fetch('/api/track', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'phone' }),
+  }).catch(() => {})
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -46,6 +54,7 @@ export default function Navbar() {
           ))}
           <a
             href="tel:05427963140"
+            onClick={trackPhone}
             className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-5 rounded-lg text-sm transition-all"
           >
             📞 Bizi Arayın
@@ -76,6 +85,7 @@ export default function Navbar() {
           ))}
           <a
             href="tel:05427963140"
+            onClick={trackPhone}
             className="block bg-red-600 text-white text-center font-bold py-2 px-4 rounded-lg mt-3 text-sm"
           >
             📞 0542 796 31 40
