@@ -3,12 +3,12 @@
 import OpenStatus from './OpenStatus'
 
 function track(type: 'phone' | 'whatsapp') {
-  const data = JSON.stringify({ type })
-  if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
-    navigator.sendBeacon('/api/track', new Blob([data], { type: 'application/json' }))
-  } else {
-    fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: data }).catch(() => {})
-  }
+  fetch('/api/track', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type }),
+    keepalive: true,
+  }).catch(() => {})
 }
 
 export default function Contact() {
