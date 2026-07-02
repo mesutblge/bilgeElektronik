@@ -23,6 +23,20 @@ interface GalleryImage {
   url: string
 }
 
+interface ClickEntry {
+  type: 'phone' | 'whatsapp'
+  timestamp: string
+  city: string | null
+  region: string | null
+  country: string | null
+}
+
+interface StatsData {
+  clicks: ClickEntry[]
+  phone: number
+  whatsapp: number
+}
+
 function SortableImage({
   img,
   index,
@@ -72,13 +86,14 @@ export default function AdminPage() {
   const [deleting, setDeleting] = useState<string | null>(null)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [stats, setStats] = useState<StatsData>({ clicks: [], phone: 0, whatsapp: 0 })
   const fileRef = useRef<HTMLInputElement>(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
   useEffect(() => {
     fetch('/api/auth').then(res => {
-      if (res.ok) { setAuthenticated(true); fetchImages() }
+      if (res.ok) { setAuthenticated(true); fetchImages(); fetchStats() }
     })
   }, [])
 
@@ -86,6 +101,14 @@ export default function AdminPage() {
     const res = await fetch('/api/images')
     const data = await res.json()
     setImages(data.images || [])
+  }
+
+  async function fetchStats() {
+    const res = await fetch('/api/stats')
+    if (res.ok) {
+      const data = await res.json()
+      setStats(data)
+    }
   }
 
   async function saveOrder(items: GalleryImage[]) {
@@ -115,7 +138,7 @@ export default function AdminPage() {
     })
     if (!res.ok) { setError('Şifre yanlış'); return }
     setAuthenticated(true); setError(''); setPassword('')
-    fetchImages()
+    fetchImages(); fetchStats()
   }
 
   async function handleLogout() {
@@ -178,6 +201,48 @@ export default function AdminPage() {
             <a href="/" className="border border-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm transition-colors">← Siteye Dön</a>
             <button onClick={handleLogout} className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm transition-colors">Çıkış</button>
           </div>
+        </div>
+
+        {/* Stats Section */}
+        <div className="bg-slate-800 rounded-2xl border border-slate-700 p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-white font-bold text-base flex items-center gap-2">📊 Bugünkü Tıklamalar</h2>
+            <div className="flex items-center gap-3">
+              <span className="text-slate-500 text-xs">{new Date().toLocaleDateString('tr-TR')}</span>
+              <button onClick={fetchStats} className="text-slate-400 hover:text-white text-xs border border-slate-600 hover:border-slate-500 px-2 py-1 rounded-lg transition-colors">↻ Yenile</button>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="bg-slate-700 rounded-xl p-4 text-center">
+              <div className="text-3xl font-black text-red-400">{stats.phone}</div>
+              <div className="text-slate-400 text-sm mt-1">📞 Telefon</div>
+            </div>
+            <div className="bg-slate-700 rounded-xl p-4 text-center">
+              <div className="text-3xl font-black text-green-400">{stats.whatsapp}</div>
+              <div className="text-slate-400 text-sm mt-1">💬 WhatsApp</div>
+            </div>
+          </div>
+          {stats.clicks.length === 0 ? (
+            <p className="text-slate-500 text-sm text-center py-2">Bugün henüz tıklama yok.</p>
+          ) : (
+            <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+              {[...stats.clicks].reverse().map((click, i) => (
+                <div key={i} className="flex items-center gap-3 bg-slate-700/50 rounded-lg px-3 py-2 text-xs">
+                  <span className="text-slate-500 shrink-0">
+                    {new Date(click.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                  <span className={click.type === 'whatsapp' ? 'text-green-400 shrink-0' : 'text-red-400 shrink-0'}>
+                    {click.type === 'whatsapp' ? '💬 WhatsApp' : '📞 Telefon'}
+                  </span>
+                  {(click.city || click.country) && (
+                    <span className="text-slate-400 truncate">
+                      📍 {[click.city, click.region, click.country].filter(Boolean).join(', ')}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="bg-slate-800 border-2 border-dashed border-slate-600 hover:border-red-500 rounded-2xl p-8 text-center mb-8 transition-colors cursor-pointer" onClick={() => fileRef.current?.click()}>

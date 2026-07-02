@@ -6,7 +6,9 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
   try {
     const { blobs } = await list()
-    const imageBlobs = blobs.filter((b) => !b.pathname.includes('_order.json'))
+    const imageBlobs = blobs.filter(
+      (b) => !b.pathname.includes('_order.json') && !b.pathname.includes('_clicks_')
+    )
     const images = imageBlobs.map((b) => ({ public_id: b.url, url: b.url }))
 
     const orderBlob = blobs.find((b) => b.pathname.includes('_order.json'))
