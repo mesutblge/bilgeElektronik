@@ -105,7 +105,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       today: {
-        clicks: todayClicks.filter((c) => c.type !== 'visit'),
+        clicks: todayClicks,
         phone: todayClicks.filter((c) => c.type === 'phone').length,
         whatsapp: todayClicks.filter((c) => c.type === 'whatsapp').length,
         visit: todayClicks.filter((c) => c.type === 'visit').length,

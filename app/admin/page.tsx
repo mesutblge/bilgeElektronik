@@ -244,8 +244,8 @@ export default function AdminPage() {
                   <span className="text-slate-500 shrink-0">
                     {new Date(click.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
                   </span>
-                  <span className={click.type === 'whatsapp' ? 'text-green-400 shrink-0' : 'text-red-400 shrink-0'}>
-                    {click.type === 'whatsapp' ? '💬 WhatsApp' : '📞 Telefon'}
+                  <span className={click.type === 'whatsapp' ? 'text-green-400 shrink-0' : click.type === 'phone' ? 'text-red-400 shrink-0' : 'text-blue-400 shrink-0'}>
+                    {click.type === 'whatsapp' ? '💬 WhatsApp' : click.type === 'phone' ? '📞 Telefon' : '👁 Ziyaret'}
                   </span>
                   {(click.city || click.country) && (
                     <span className="text-slate-400 truncate">📍 {[click.city, click.region, click.country].filter(Boolean).join(', ')}</span>
