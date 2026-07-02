@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Script from 'next/script'
 import VisitTracker from '@/components/VisitTracker'
 import './globals.css'
 
@@ -63,17 +62,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
-      </head>
-      <body className={inter.className}>
-        <VisitTracker />
-        {children}
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-CSERRSFD19" strategy="afterInteractive" />
-        <Script id="google-analytics" strategy="afterInteractive">{`
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-CSERRSFD19" />
+        <script dangerouslySetInnerHTML={{ __html: `
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'G-CSERRSFD19');
-        `}</Script>
+        `}} />
+      </head>
+      <body className={inter.className}>
+        <VisitTracker />
+        {children}
       </body>
     </html>
   )
