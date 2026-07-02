@@ -93,6 +93,7 @@ export default function AdminPage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const [stats, setStats] = useState<StatsData>({ today: { clicks: [], phone: 0, whatsapp: 0, visit: 0 }, weekly: [] })
+  const [weeklyOpen, setWeeklyOpen] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
@@ -238,28 +239,11 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* Son 7 gün tablosu */}
-          {stats.weekly.length > 0 && (
-            <div className="mb-4">
-              <p className="text-slate-500 text-xs mb-2">Son 7 Gün</p>
-              <div className="space-y-1">
-                {stats.weekly.map((day) => (
-                  <div key={day.date} className="flex items-center gap-3 bg-slate-700/40 rounded-lg px-3 py-2 text-xs">
-                    <span className="text-slate-400 w-24 shrink-0">{new Date(day.date + 'T12:00:00').toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
-                    <span className="text-blue-400">👁 {day.visit}</span>
-                    <span className="text-red-400">📞 {day.phone}</span>
-                    <span className="text-green-400">💬 {day.whatsapp}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Bugünkü detay */}
           {stats.today.clicks.length === 0 ? (
             <p className="text-slate-500 text-sm text-center py-2">Bugün henüz tıklama yok.</p>
           ) : (
-            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1 mb-4">
               <p className="text-slate-500 text-xs mb-1">Bugünkü Detay</p>
               {[...stats.today.clicks].reverse().map((click, i) => (
                 <div key={i} className="flex items-center gap-3 bg-slate-700/50 rounded-lg px-3 py-2 text-xs">
@@ -272,6 +256,27 @@ export default function AdminPage() {
                   {(click.city || click.country) && (
                     <span className="text-slate-400 truncate">📍 {[click.city, click.region, click.country].filter(Boolean).join(', ')}</span>
                   )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Son 7 gün - açılır/kapanır */}
+          <button
+            onClick={() => setWeeklyOpen(!weeklyOpen)}
+            className="w-full flex items-center justify-between text-slate-400 hover:text-white text-xs border border-slate-700 hover:border-slate-500 rounded-lg px-3 py-2 mt-2 transition-colors"
+          >
+            <span>Son 7 Gün</span>
+            <span>{weeklyOpen ? '▲' : '▼'}</span>
+          </button>
+          {weeklyOpen && stats.weekly.length > 0 && (
+            <div className="space-y-1 mt-2">
+              {stats.weekly.map((day) => (
+                <div key={day.date} className="flex items-center gap-3 bg-slate-700/40 rounded-lg px-3 py-2 text-xs">
+                  <span className="text-slate-400 w-24 shrink-0">{new Date(day.date + 'T12:00:00').toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                  <span className="text-blue-400">👁 {day.visit}</span>
+                  <span className="text-red-400">📞 {day.phone}</span>
+                  <span className="text-green-400">💬 {day.whatsapp}</span>
                 </div>
               ))}
             </div>
