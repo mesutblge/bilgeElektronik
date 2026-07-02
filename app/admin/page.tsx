@@ -208,7 +208,6 @@ export default function AdminPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-white font-black text-2xl flex items-center gap-2"><span className="text-red-500">⚡</span> Admin Paneli</h1>
-            <p className="text-slate-400 text-sm mt-1">Sürükleyerek sıralamayı değiştirebilirsin</p>
           </div>
           <div className="flex gap-3">
             <a href="/" className="border border-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm transition-colors">← Siteye Dön</a>
