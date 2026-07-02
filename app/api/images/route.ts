@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const { blobs } = await list()
     const imageBlobs = blobs.filter(
-      (b) => !b.pathname.includes('_order.json') && !b.pathname.includes('_clicks_')
+      (b) => !b.pathname.includes('_order.json') && !b.pathname.includes('_click_')
     )
     const images = imageBlobs.map((b) => ({ public_id: b.url, url: b.url }))
 

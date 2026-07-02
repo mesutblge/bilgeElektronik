@@ -16,26 +16,28 @@ export async function GET(req: NextRequest) {
     }
 
     const today = new Date().toISOString().split('T')[0]
-    const filename = `_clicks_${today}.json`
-
     const { blobs } = await list()
-    const clicksBlob = blobs.find((b) => b.pathname.includes(filename))
+    const clickBlobs = blobs.filter((b) => b.pathname.includes(`_click_${today}_`))
 
-    if (!clicksBlob) {
-      return NextResponse.json({ clicks: [], phone: 0, whatsapp: 0 })
-    }
+    const clicks = await Promise.all(
+      clickBlobs.map(async (blob) => {
+        try {
+          const res = await fetch(blob.url)
+          return await res.json()
+        } catch {
+          return null
+        }
+      })
+    )
 
-    const res = await fetch(clicksBlob.url)
-    if (!res.ok) {
-      return NextResponse.json({ clicks: [], phone: 0, whatsapp: 0 })
-    }
-
-    const clicks: { type: string }[] = await res.json()
+    const valid = clicks
+      .filter(Boolean)
+      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
 
     return NextResponse.json({
-      clicks,
-      phone: clicks.filter((c) => c.type === 'phone').length,
-      whatsapp: clicks.filter((c) => c.type === 'whatsapp').length,
+      clicks: valid,
+      phone: valid.filter((c) => c.type === 'phone').length,
+      whatsapp: valid.filter((c) => c.type === 'whatsapp').length,
     })
   } catch {
     return NextResponse.json({ clicks: [], phone: 0, whatsapp: 0 })

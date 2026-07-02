@@ -1,4 +1,4 @@
-import { list, put } from '@vercel/blob'
+import { put } from '@vercel/blob'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
@@ -27,42 +27,26 @@ async function saveClick(type: string, req: NextRequest) {
   const geo = ip ? await getGeo(ip) : null
 
   const today = new Date().toISOString().split('T')[0]
-  const filename = `_clicks_${today}.json`
+  const filename = `_click_${today}_${Date.now()}.json`
 
-  const { blobs } = await list()
-  const clicksBlob = blobs.find((b) => b.pathname.includes(filename))
-  let clicks: object[] = []
-
-  if (clicksBlob) {
-    const existing = await fetch(clicksBlob.url)
-    clicks = await existing.json()
-  }
-
-  clicks.push({
+  await put(filename, JSON.stringify({
     type,
     timestamp: new Date().toISOString(),
     city: geo?.city || null,
     region: geo?.region || null,
     country: geo?.country || null,
-  })
-
-  await put(filename, JSON.stringify(clicks), {
-    access: 'public',
-    allowOverwrite: true,
-  } as Parameters<typeof put>[2])
+  }), { access: 'public' })
 }
 
-// GET: telefon linkleri için (image pixel yöntemi - sayfa geçişinde iptal edilmez)
+// GET: telefon linkleri için — image pixel yöntemi
 export async function GET(req: NextRequest) {
   try {
     const type = req.nextUrl.searchParams.get('type')
-    if (type !== 'phone' && type !== 'whatsapp') {
-      return new NextResponse(null, { status: 400 })
+    if (type === 'phone' || type === 'whatsapp') {
+      await saveClick(type, req)
     }
-    await saveClick(type, req)
   } catch {}
 
-  // 1x1 şeffaf GIF döndür
   const gif = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64')
   return new NextResponse(gif, {
     headers: { 'Content-Type': 'image/gif', 'Cache-Control': 'no-store' },
