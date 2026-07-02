@@ -31,10 +31,15 @@ interface ClickEntry {
   country: string | null
 }
 
-interface StatsData {
-  clicks: ClickEntry[]
+interface DayStats {
+  date: string
   phone: number
   whatsapp: number
+}
+
+interface StatsData {
+  today: { clicks: ClickEntry[]; phone: number; whatsapp: number }
+  weekly: DayStats[]
 }
 
 function SortableImage({
@@ -86,7 +91,7 @@ export default function AdminPage() {
   const [deleting, setDeleting] = useState<string | null>(null)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
-  const [stats, setStats] = useState<StatsData>({ clicks: [], phone: 0, whatsapp: 0 })
+  const [stats, setStats] = useState<StatsData>({ today: { clicks: [], phone: 0, whatsapp: 0 }, weekly: [] })
   const fileRef = useRef<HTMLInputElement>(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
@@ -212,27 +217,46 @@ export default function AdminPage() {
         {/* Stats Section */}
         <div className="bg-slate-800 rounded-2xl border border-slate-700 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white font-bold text-base flex items-center gap-2">📊 Bugünkü Tıklamalar</h2>
-            <div className="flex items-center gap-3">
-              <span className="text-slate-500 text-xs">{new Date().toLocaleDateString('tr-TR')}</span>
-              <button onClick={fetchStats} className="text-slate-400 hover:text-white text-xs border border-slate-600 hover:border-slate-500 px-2 py-1 rounded-lg transition-colors">↻ Yenile</button>
+            <h2 className="text-white font-bold text-base">📊 Tıklama İstatistikleri</h2>
+            <button onClick={fetchStats} className="text-slate-400 hover:text-white text-xs border border-slate-600 hover:border-slate-500 px-2 py-1 rounded-lg transition-colors">↻ Yenile</button>
+          </div>
+
+          {/* Bugün */}
+          <div className="grid grid-cols-2 gap-3 mb-5">
+            <div className="bg-slate-700 rounded-xl p-4 text-center">
+              <div className="text-3xl font-black text-red-400">{stats.today.phone}</div>
+              <div className="text-slate-400 text-sm mt-1">📞 Bugün Telefon</div>
+            </div>
+            <div className="bg-slate-700 rounded-xl p-4 text-center">
+              <div className="text-3xl font-black text-green-400">{stats.today.whatsapp}</div>
+              <div className="text-slate-400 text-sm mt-1">💬 Bugün WhatsApp</div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="bg-slate-700 rounded-xl p-4 text-center">
-              <div className="text-3xl font-black text-red-400">{stats.phone}</div>
-              <div className="text-slate-400 text-sm mt-1">📞 Telefon</div>
+
+          {/* Son 7 gün tablosu */}
+          {stats.weekly.length > 0 && (
+            <div className="mb-4">
+              <p className="text-slate-500 text-xs mb-2">Son 7 Gün</p>
+              <div className="space-y-1">
+                {stats.weekly.map((day) => (
+                  <div key={day.date} className="flex items-center gap-3 bg-slate-700/40 rounded-lg px-3 py-2 text-xs">
+                    <span className="text-slate-400 w-24 shrink-0">{new Date(day.date + 'T12:00:00').toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                    <span className="text-red-400">📞 {day.phone}</span>
+                    <span className="text-green-400">💬 {day.whatsapp}</span>
+                    <span className="text-slate-500 ml-auto">toplam {day.phone + day.whatsapp}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="bg-slate-700 rounded-xl p-4 text-center">
-              <div className="text-3xl font-black text-green-400">{stats.whatsapp}</div>
-              <div className="text-slate-400 text-sm mt-1">💬 WhatsApp</div>
-            </div>
-          </div>
-          {stats.clicks.length === 0 ? (
+          )}
+
+          {/* Bugünkü detay */}
+          {stats.today.clicks.length === 0 ? (
             <p className="text-slate-500 text-sm text-center py-2">Bugün henüz tıklama yok.</p>
           ) : (
-            <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
-              {[...stats.clicks].reverse().map((click, i) => (
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+              <p className="text-slate-500 text-xs mb-1">Bugünkü Detay</p>
+              {[...stats.today.clicks].reverse().map((click, i) => (
                 <div key={i} className="flex items-center gap-3 bg-slate-700/50 rounded-lg px-3 py-2 text-xs">
                   <span className="text-slate-500 shrink-0">
                     {new Date(click.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
@@ -241,9 +265,7 @@ export default function AdminPage() {
                     {click.type === 'whatsapp' ? '💬 WhatsApp' : '📞 Telefon'}
                   </span>
                   {(click.city || click.country) && (
-                    <span className="text-slate-400 truncate">
-                      📍 {[click.city, click.region, click.country].filter(Boolean).join(', ')}
-                    </span>
+                    <span className="text-slate-400 truncate">📍 {[click.city, click.region, click.country].filter(Boolean).join(', ')}</span>
                   )}
                 </div>
               ))}
