@@ -21,43 +21,61 @@ async function getGeo(ip: string) {
   }
 }
 
+async function saveClick(type: string, req: NextRequest) {
+  const forwarded = req.headers.get('x-forwarded-for')
+  const ip = forwarded ? forwarded.split(',')[0].trim() : null
+  const geo = ip ? await getGeo(ip) : null
+
+  const today = new Date().toISOString().split('T')[0]
+  const filename = `_clicks_${today}.json`
+
+  const { blobs } = await list()
+  const clicksBlob = blobs.find((b) => b.pathname.includes(filename))
+  let clicks: object[] = []
+
+  if (clicksBlob) {
+    const existing = await fetch(clicksBlob.url)
+    clicks = await existing.json()
+  }
+
+  clicks.push({
+    type,
+    timestamp: new Date().toISOString(),
+    city: geo?.city || null,
+    region: geo?.region || null,
+    country: geo?.country || null,
+  })
+
+  await put(filename, JSON.stringify(clicks), {
+    access: 'public',
+    allowOverwrite: true,
+  } as Parameters<typeof put>[2])
+}
+
+// GET: telefon linkleri için (image pixel yöntemi - sayfa geçişinde iptal edilmez)
+export async function GET(req: NextRequest) {
+  try {
+    const type = req.nextUrl.searchParams.get('type')
+    if (type !== 'phone' && type !== 'whatsapp') {
+      return new NextResponse(null, { status: 400 })
+    }
+    await saveClick(type, req)
+  } catch {}
+
+  // 1x1 şeffaf GIF döndür
+  const gif = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64')
+  return new NextResponse(gif, {
+    headers: { 'Content-Type': 'image/gif', 'Cache-Control': 'no-store' },
+  })
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { type } = await req.json()
     if (type !== 'phone' && type !== 'whatsapp') {
       return NextResponse.json({ error: 'Geçersiz tip' }, { status: 400 })
     }
-
-    const forwarded = req.headers.get('x-forwarded-for')
-    const ip = forwarded ? forwarded.split(',')[0].trim() : null
-
-    const geo = ip ? await getGeo(ip) : null
-
-    const today = new Date().toISOString().split('T')[0]
-    const filename = `_clicks_${today}.json`
-
-    const { blobs } = await list()
-    const clicksBlob = blobs.find((b) => b.pathname.includes(filename))
-    let clicks: object[] = []
-
-    if (clicksBlob) {
-      const existing = await fetch(clicksBlob.url, { cache: 'no-store' })
-      clicks = await existing.json()
-    }
-
-    clicks.push({
-      type,
-      timestamp: new Date().toISOString(),
-      city: geo?.city || null,
-      region: geo?.region || null,
-      country: geo?.country || null,
-    })
-
-    await put(filename, JSON.stringify(clicks), {
-      access: 'public',
-      allowOverwrite: true,
-    } as Parameters<typeof put>[2])
-
+    await saveClick(type, req)
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ error: 'Hata' }, { status: 500 })

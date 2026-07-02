@@ -11,11 +11,7 @@ const links = [
 ]
 
 function trackPhone() {
-  fetch('/api/track', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'phone' }),
-  }).catch(() => {})
+  new Image().src = `/api/track?type=phone&t=${Date.now()}`
 }
 
 export default function Navbar() {

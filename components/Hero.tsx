@@ -1,3 +1,9 @@
+'use client'
+
+function trackPhone() {
+  new Image().src = `/api/track?type=phone&t=${Date.now()}`
+}
+
 export default function Hero() {
   return (
     <section
@@ -34,6 +40,7 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <a
             href="tel:05427963140"
+            onClick={trackPhone}
             className="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all hover:scale-105 shadow-lg shadow-red-600/25 flex items-center gap-2"
           >
             📞 0542 796 31 40

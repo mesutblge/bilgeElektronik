@@ -2,12 +2,8 @@
 
 import OpenStatus from './OpenStatus'
 
-function track(type: 'phone' | 'whatsapp') {
-  fetch('/api/track', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type }),
-  }).catch(() => {})
+function trackPhone() {
+  new Image().src = `/api/track?type=phone&t=${Date.now()}`
 }
 
 export default function Contact() {
@@ -46,7 +42,7 @@ export default function Contact() {
                 <h3 className="font-bold text-white mb-1">Telefon</h3>
                 <a
                   href="tel:05427963140"
-                  onClick={() => track('phone')}
+                  onClick={trackPhone}
                   className="text-red-400 hover:text-red-300 font-semibold text-lg transition-colors"
                 >
                   0542 796 31 40
