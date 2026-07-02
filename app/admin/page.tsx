@@ -35,10 +35,11 @@ interface DayStats {
   date: string
   phone: number
   whatsapp: number
+  visit: number
 }
 
 interface StatsData {
-  today: { clicks: ClickEntry[]; phone: number; whatsapp: number }
+  today: { clicks: ClickEntry[]; phone: number; whatsapp: number; visit: number }
   weekly: DayStats[]
 }
 
@@ -91,7 +92,7 @@ export default function AdminPage() {
   const [deleting, setDeleting] = useState<string | null>(null)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
-  const [stats, setStats] = useState<StatsData>({ today: { clicks: [], phone: 0, whatsapp: 0 }, weekly: [] })
+  const [stats, setStats] = useState<StatsData>({ today: { clicks: [], phone: 0, whatsapp: 0, visit: 0 }, weekly: [] })
   const fileRef = useRef<HTMLInputElement>(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
@@ -222,14 +223,18 @@ export default function AdminPage() {
           </div>
 
           {/* Bugün */}
-          <div className="grid grid-cols-2 gap-3 mb-5">
+          <div className="grid grid-cols-3 gap-3 mb-5">
+            <div className="bg-slate-700 rounded-xl p-4 text-center">
+              <div className="text-3xl font-black text-blue-400">{stats.today.visit}</div>
+              <div className="text-slate-400 text-sm mt-1">👁 Bugün Ziyaret</div>
+            </div>
             <div className="bg-slate-700 rounded-xl p-4 text-center">
               <div className="text-3xl font-black text-red-400">{stats.today.phone}</div>
-              <div className="text-slate-400 text-sm mt-1">📞 Bugün Telefon</div>
+              <div className="text-slate-400 text-sm mt-1">📞 Telefon</div>
             </div>
             <div className="bg-slate-700 rounded-xl p-4 text-center">
               <div className="text-3xl font-black text-green-400">{stats.today.whatsapp}</div>
-              <div className="text-slate-400 text-sm mt-1">💬 Bugün WhatsApp</div>
+              <div className="text-slate-400 text-sm mt-1">💬 WhatsApp</div>
             </div>
           </div>
 
@@ -241,9 +246,9 @@ export default function AdminPage() {
                 {stats.weekly.map((day) => (
                   <div key={day.date} className="flex items-center gap-3 bg-slate-700/40 rounded-lg px-3 py-2 text-xs">
                     <span className="text-slate-400 w-24 shrink-0">{new Date(day.date + 'T12:00:00').toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                    <span className="text-blue-400">👁 {day.visit}</span>
                     <span className="text-red-400">📞 {day.phone}</span>
                     <span className="text-green-400">💬 {day.whatsapp}</span>
-                    <span className="text-slate-500 ml-auto">toplam {day.phone + day.whatsapp}</span>
                   </div>
                 ))}
               </div>

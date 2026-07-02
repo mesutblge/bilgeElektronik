@@ -42,7 +42,7 @@ async function saveClick(type: string, req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const type = req.nextUrl.searchParams.get('type')
-    if (type === 'phone' || type === 'whatsapp') {
+    if (type === 'phone' || type === 'whatsapp' || type === 'visit') {
       await saveClick(type, req)
     }
   } catch {}
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const { type } = await req.json()
-    if (type !== 'phone' && type !== 'whatsapp') {
+    if (type !== 'phone' && type !== 'whatsapp' && type !== 'visit') {
       return NextResponse.json({ error: 'Geçersiz tip' }, { status: 400 })
     }
     await saveClick(type, req)

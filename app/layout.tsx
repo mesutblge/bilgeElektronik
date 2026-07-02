@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
+import VisitTracker from '@/components/VisitTracker'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={inter.className}>
+        <VisitTracker />
         {children}
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-CSERRSFD19" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">{`

@@ -77,6 +77,7 @@ export async function GET(req: NextRequest) {
             date: day.date,
             phone: todayClicks.filter((c) => c.type === 'phone').length,
             whatsapp: todayClicks.filter((c) => c.type === 'whatsapp').length,
+            visit: todayClicks.filter((c) => c.type === 'visit').length,
           }
         }
         // Diğer günler için dosyaları oku
@@ -97,15 +98,17 @@ export async function GET(req: NextRequest) {
           date: day.date,
           phone: clicks.filter((c: { type: string }) => c.type === 'phone').length,
           whatsapp: clicks.filter((c: { type: string }) => c.type === 'whatsapp').length,
+          visit: clicks.filter((c: { type: string }) => c.type === 'visit').length,
         }
       })
     )
 
     return NextResponse.json({
       today: {
-        clicks: todayClicks,
+        clicks: todayClicks.filter((c) => c.type !== 'visit'),
         phone: todayClicks.filter((c) => c.type === 'phone').length,
         whatsapp: todayClicks.filter((c) => c.type === 'whatsapp').length,
+        visit: todayClicks.filter((c) => c.type === 'visit').length,
       },
       weekly: weeklyWithTypes,
     })
